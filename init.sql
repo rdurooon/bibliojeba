@@ -1,11 +1,3 @@
-ALTER TABLE usuario
-ADD endereco VARCHAR(255) NOT NULL,
-ADD numero_cel VARCHAR(20) NOT NULL,
-ADD bairro VARCHAR(100) NOT NULL,
-ADD cidade VARCHAR(100) NOT NULL,
-ADD estado VARCHAR(50) NOT NULL,
-ADD cep VARCHAR(10) NOT NULL;
-
 CREATE TABLE `tipo_usuario` (
   `id_tipo_usuario` int NOT NULL,
   `nome` varchar(20) NOT NULL,
