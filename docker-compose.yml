@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_livraria
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: qwe123
+      MYSQL_DATABASE: livraria
+      MYSQL_USER: biblojeba
+      MYSQL_PASSWORD: qwe123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_conteiner
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+      
+volumes:
+  mysql_data:
