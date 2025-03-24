@@ -21,8 +21,8 @@ public class Dao {
         }
     }
 
-    public String getUserType(String login){
-        String query = "SELECT t.nome FROM usuario u JOIN tipo_usuario t ON u.id_tipo_usuario = t.id_tipo_usuario WHERE u.username = ?";
+    public int getUserType(String login){
+        String query = "SELECT u.id_tipo_usuario FROM usuario u WHERE u.username = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
             ps.setString(1, login);
@@ -30,14 +30,14 @@ public class Dao {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()){
-                return rs.getString("nome");
+                return rs.getInt("id_tipo_usuario");
             } else {
-                return "Cliente";
+                return 3;
             }
 
         } catch (SQLException e){
             e.printStackTrace();
-            return null;
+            return 1;
         }   
     }
 
@@ -56,13 +56,19 @@ public class Dao {
     }
 
     public boolean createAccount(Usuario usuario){
-        String query = "INSERT INTO usuario (email, senha, username, id_tipo_usuario) VALUES (?,?,?,?)";
+        String query = "INSERT INTO `usuario` (`username`, `email`, `senha`, `numero_cel`, `endereco`, `bairro`, `cidade`, `estado`, `cep`, `id_tipo_usuario`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
-            ps.setString(1, usuario.getEmail());
-            ps.setString(2, usuario.getPassword());
-            ps.setString(3, usuario.getUsername());
-            ps.setInt(4, 3);
+            ps.setString(1, usuario.getUsername());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, usuario.getPassword());
+            ps.setString(4, usuario.getNumeroCel());
+            ps.setString(5, usuario.getEndereco());
+            ps.setString(6, usuario.getBairro());
+            ps.setString(7, usuario.getCidade());
+            ps.setString(8, usuario.getEstado());
+            ps.setString(9, usuario.getCep());
+            ps.setInt(10, usuario.getIdTipoUsuario());
 
             int sucess = ps.executeUpdate();
 

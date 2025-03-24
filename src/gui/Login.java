@@ -2,14 +2,14 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-
-import classes.TipoUsuario;
-import classes.Usuario;
+import javax.swing.text.MaskFormatter;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.ParseException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import classes.Usuario;
 import dbconnect.Dao;
 
 public class Login {
@@ -84,9 +84,7 @@ public class Login {
                     return;
                 }
 
-                String userType = userEntry.getUserType(login);
-
-                if(userType.equals("Administrador") || userType.equals("Bibliotecario")){
+                if(userEntry.getUserType(login) == 1 || userEntry.getUserType(login) == 2){
                     new AdminMenu();
                 } else {
                     new MainMenu(); 
@@ -111,7 +109,7 @@ public class Login {
     public static void Cadastrar(){
         JFrame cadFrame = new JFrame("Tela de cadastro");
         cadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        cadFrame.setSize(350, 400);
+        cadFrame.setSize(450, 500);
         cadFrame.setResizable(false);
         cadFrame.setLocationRelativeTo(null);
 
@@ -136,6 +134,29 @@ public class Login {
         JTextField nomeField = new JTextField(20);
         nomePanel.add(nomeField);
         dadosPessoaisPanel.add(nomePanel);
+
+        JPanel numeroCelPanel = new JPanel();
+        numeroCelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel numeroCelLabel = new JLabel("Nº celular:");
+        numeroCelPanel.add(numeroCelLabel);
+
+        JFormattedTextField numeroCelField = null;
+
+        try {
+            MaskFormatter formatoNumeroCel = new MaskFormatter("(##)#####-####");
+            formatoNumeroCel.setPlaceholderCharacter('_');
+            numeroCelField = new JFormattedTextField(formatoNumeroCel);
+            numeroCelField.setColumns(15);
+            numeroCelPanel.add(numeroCelField);
+        } catch (ParseException e) {
+            System.out.println("Erro ao formatar Nº Celular | " + e);
+            numeroCelField = new JFormattedTextField(15);
+            numeroCelPanel.add(numeroCelField);
+        }
+        dadosPessoaisPanel.add(numeroCelPanel);
+
+        numeroCelPanel.add(numeroCelField);
+        dadosPessoaisPanel.add(numeroCelPanel);
         
         JPanel emailPanel = new JPanel();
         emailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5,5));
@@ -156,30 +177,103 @@ public class Login {
         cadPanel.add(dadosPessoaisPanel);
         cadPanel.add(Box.createRigidArea(new Dimension(0,10)));
 
+        JPanel enderecoPanel = new JPanel();
+        enderecoPanel.setLayout(new BoxLayout(enderecoPanel, BoxLayout.Y_AXIS));
+        enderecoPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY), "Dados de Endereço", 
+            TitledBorder.LEFT, TitledBorder.TOP));
+
+        JPanel addressPanel = new JPanel();
+        addressPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel enderecoLabel = new JLabel("Endereço:");
+        addressPanel.add(enderecoLabel);
+        JTextField enderecoField = new JTextField(20);
+        addressPanel.add(enderecoField);
+        enderecoPanel.add(addressPanel);
+
+
+        JPanel bairroPanel = new JPanel();
+        bairroPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel bairroLabel = new JLabel("Bairro:");
+        bairroPanel.add(bairroLabel);
+        JTextField bairroField = new JTextField(20);
+        bairroPanel.add(bairroField);
+        enderecoPanel.add(bairroPanel);
+
+        JPanel cidadePanel = new JPanel();
+        cidadePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel cidadeLabel = new JLabel("Cidade:");
+        cidadePanel.add(cidadeLabel);
+        JTextField cidadeField = new JTextField(20);
+        cidadePanel.add(cidadeField);
+        enderecoPanel.add(cidadePanel);
+
+        JPanel estadoPanel = new JPanel();
+        estadoPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel estadoLabel = new JLabel("Estado:");
+        estadoPanel.add(estadoLabel);
+        String[] estados = {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"};
+        JComboBox<String> estadoField = new JComboBox<>(estados); 
+        estadoPanel.add(estadoField);
+        enderecoPanel.add(estadoPanel);
+
+        JPanel cepPanel = new JPanel();
+        cepPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel cepLabel = new JLabel("CEP:");
+        cepPanel.add(cepLabel);
+        JFormattedTextField cepField = null;
+
+        try {
+            cepField = new JFormattedTextField(new MaskFormatter("#####-###"));
+            cepField.setColumns(10);
+            cepPanel.add(cepField);
+        } catch (ParseException e) {
+            System.out.println("Erro ao formatar CEP | " + e);
+            cepField = new JFormattedTextField(20);
+            cepPanel.add(cepField);
+        }
+        enderecoPanel.add(cepPanel);
+
+        cadPanel.add(enderecoPanel);
+        cadPanel.add(Box.createRigidArea(new Dimension(0,10)));
+
         JPanel btnPanel = new JPanel();
         btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton cadBtn = new JButton("Cadastrar");
         btnPanel.add(cadBtn);
         cadPanel.add(btnPanel);
 
+        JFormattedTextField fcepField = cepField;
+        JFormattedTextField fnumeroCelField = numeroCelField;
         cadBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 Dao account = new Dao();
-                String email = emailField.getText();
                 String nome = nomeField.getText().trim();
+                String email = emailField.getText();
                 String senha = new String(senhaField.getPassword()).trim();
+                String endereco = enderecoField.getText().trim();
+                String numeroCel = fnumeroCelField.getText().trim();
+                String bairro = bairroField.getText().trim();
+                String cidade = cidadeField.getText().trim();
+                String estado = estadoField.getSelectedItem().toString();
+                String cep = fcepField.getText();
                 
-                if(email.isEmpty() || nome.isEmpty() || senha.isEmpty()){
+                if(nome.isEmpty() || email.isEmpty() || senha.isEmpty() || endereco.isEmpty() || numeroCel.trim().replace("-","").replace("(", "").replace(")", "").replace("_", "").isEmpty() || bairro.isEmpty() || cidade.isEmpty() || cep.trim().replace("-", "").isEmpty()){
                     JOptionPane.showMessageDialog(null,"Preencha todos os campos!");
                     return;
                 }
                 
+                if(numeroCel.length() < 11 || numeroCel.length() > 15 || !numeroCel.matches("\\(\\d{2}\\)\\d{5}-\\d{4}")){
+                    JOptionPane.showMessageDialog(null, "N° de celular invalido! Insira outro número.");
+                    return;
+                }
+
                 if(account.existAccount(email)){
                     JOptionPane.showMessageDialog(null, "Usuário já cadastrado neste email. \nTente logar ou utilizar outro", "Conta existente", 0);
                     return;
                 }
-
+                
                 String emailRegex = "^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$";
                 Pattern padrao = Pattern.compile(emailRegex);
                 Matcher match = padrao.matcher(email);
@@ -189,7 +283,7 @@ public class Login {
                     return;
                 }
 
-                Usuario novoUsuario = new Usuario(0,email,senha,nome,new TipoUsuario(3, "Cliente"));
+                Usuario novoUsuario = new Usuario(0, nome, email, senha, numeroCel, endereco, bairro, cidade, estado, cep, 3);
                 if(account.createAccount(novoUsuario)){
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
                     new MainMenu();
@@ -201,6 +295,8 @@ public class Login {
 
             }
         });
+
+        cadPanel.add(Box.createVerticalGlue());
 
         cadFrame.add(cadPanel);
         cadFrame.setVisible(true);

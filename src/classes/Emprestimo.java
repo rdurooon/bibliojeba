@@ -1,11 +1,11 @@
 package classes;
 
-public class UsuarioLivro {
+public class Emprestimo {
     private int id;
     private Usuario usuario;
     private Livro livro;
     
-    public UsuarioLivro(int id, Usuario usuario, Livro livro) {
+    public Emprestimo(int id, Usuario usuario, Livro livro) {
         this.id = id;
         this.usuario = usuario;
         this.livro = livro;

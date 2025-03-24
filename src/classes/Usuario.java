@@ -2,19 +2,31 @@ package classes;
 
 public class Usuario {
     private int id;
+    private String username;
     private String email;
     private String password;
-    private String username;
-    private TipoUsuario typeUser;
+    private String numeroCel;
+    private String endereco;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private String cep;
+    private int idTipoUsuario;
 
-    public Usuario(){}
+    public Usuario() {}
 
-    public Usuario(int id, String email, String password, String username, TipoUsuario typeUser) {
+    public Usuario(int id, String username, String email, String password, String numeroCel, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         this.id = id;
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.username = username;
-        this.typeUser = typeUser;
+        this.numeroCel = numeroCel;
+        this.endereco = endereco;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.idTipoUsuario = idTipoUsuario;
     }
 
     public int getId() {
@@ -24,7 +36,15 @@ public class Usuario {
     public void setId(int id) {
         this.id = id;
     }
-    
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -41,19 +61,59 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNumeroCel() {
+        return numeroCel;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNumeroCel(String numeroCel) {
+        this.numeroCel = numeroCel;
     }
 
-    public TipoUsuario getTypeUser() {
-        return typeUser;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setTypeUser(TipoUsuario typeUser) {
-        this.typeUser = typeUser;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public int getIdTipoUsuario() {
+        return idTipoUsuario;
+    }
+
+    public void setIdTipoUsuario(int idTipoUsuario) {
+        this.idTipoUsuario = idTipoUsuario;
     }
 }
