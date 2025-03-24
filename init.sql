@@ -1,4 +1,10 @@
-
+ALTER TABLE usuario
+ADD endereco VARCHAR(255) NOT NULL,
+ADD numero_cel VARCHAR(20) NOT NULL,
+ADD bairro VARCHAR(100) NOT NULL,
+ADD cidade VARCHAR(100) NOT NULL,
+ADD estado VARCHAR(50) NOT NULL,
+ADD cep VARCHAR(10) NOT NULL;
 
 CREATE TABLE `tipo_usuario` (
   `id_tipo_usuario` int NOT NULL,
@@ -54,6 +60,3 @@ CREATE TABLE `usuario_livro` (
   CONSTRAINT `fk_livro` FOREIGN KEY (`idlivro`) REFERENCES `livro` (`idlivro`) ON DELETE CASCADE,
   CONSTRAINT `fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-insert into tipo_usuario (id_tipo_usuario, nome) values (1,'Admnistrador'); 
-insert into tipo_usuario (id_tipo_usuario, nome) values (2,'Bibliotecario');
