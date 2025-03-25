@@ -4,7 +4,7 @@ import java.sql.*;
 
 import classes.Usuario;
 
-public class Dao {
+public class UserDao {
     public boolean joinService(String login, String senha){
         String query = "SELECT * FROM usuario WHERE username = ? AND senha = ?";
 
@@ -56,19 +56,20 @@ public class Dao {
     }
 
     public boolean createAccount(Usuario usuario){
-        String query = "INSERT INTO `usuario` (`username`, `email`, `senha`, `numero_cel`, `endereco`, `bairro`, `cidade`, `estado`, `cep`, `id_tipo_usuario`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO `usuario` (`nome`,`username`, `email`, `senha`, `numero_cel`, `endereco`, `bairro`, `cidade`, `estado`, `cep`, `id_tipo_usuario`) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
-            ps.setString(1, usuario.getUsername());
-            ps.setString(2, usuario.getEmail());
-            ps.setString(3, usuario.getPassword());
-            ps.setString(4, usuario.getNumeroCel());
-            ps.setString(5, usuario.getEndereco());
-            ps.setString(6, usuario.getBairro());
-            ps.setString(7, usuario.getCidade());
-            ps.setString(8, usuario.getEstado());
-            ps.setString(9, usuario.getCep());
-            ps.setInt(10, usuario.getIdTipoUsuario());
+            ps.setString(1, usuario.getNome());
+            ps.setString(2, usuario.getUsername());
+            ps.setString(3, usuario.getEmail());
+            ps.setString(4, usuario.getPassword());
+            ps.setString(5, usuario.getNumeroCel());
+            ps.setString(6, usuario.getEndereco());
+            ps.setString(7, usuario.getBairro());
+            ps.setString(8, usuario.getCidade());
+            ps.setString(9, usuario.getEstado());
+            ps.setString(10, usuario.getCep());
+            ps.setInt(11, usuario.getIdTipoUsuario());
 
             int sucess = ps.executeUpdate();
 

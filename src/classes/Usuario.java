@@ -2,6 +2,7 @@ package classes;
 
 public class Usuario {
     private int id;
+    private String nome;
     private String username;
     private String email;
     private String password;
@@ -15,8 +16,9 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(int id, String username, String email, String password, String numeroCel, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
+    public Usuario(int id, String nome, String username, String email, String password, String numeroCel, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         this.id = id;
+        this.nome = nome;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -35,6 +37,14 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getUsername() {

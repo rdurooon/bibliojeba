@@ -3,12 +3,14 @@ package classes;
 public class Autor {
     private int id;
     private String nome;
-    private String sobrenome;
     
-    public Autor(int id, String nome, String sobrenome) {
+    public Autor(String nome) {
+        this.nome = nome;
+    }
+
+    public Autor(int id, String nome) {
         this.id = id;
         this.nome = nome;
-        this.sobrenome = sobrenome;
     }
 
     public int getId() {
@@ -26,14 +28,4 @@ public class Autor {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-    
-    
 }

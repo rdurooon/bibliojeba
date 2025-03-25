@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import classes.Usuario;
-import dbconnect.Dao;
+import dbconnect.UserDao;
 
 public class Login {
     static JFrame mainFrame = new JFrame("Tela de login");
@@ -73,10 +73,11 @@ public class Login {
 
                 if(login.isBlank() || senha.isBlank()){
                     JOptionPane.showMessageDialog(null, "Insira seu nome de usuário e/ou senha!");
+                    loginField.requestFocus();
                     return;
                 }
 
-                Dao userEntry = new Dao();
+                UserDao userEntry = new UserDao();
                 
                 if(!userEntry.joinService(login, senha)){
                     JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos!", "Tentativa de login", 0);
@@ -101,6 +102,23 @@ public class Login {
             }
         });
 
+        loginField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    passwordField.requestFocus();
+                }
+            }
+        });
+
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    loginBtn.requestFocus();
+                }
+            }
+        });
 
         mainFrame.add(cadFrame);
         mainFrame.setVisible(true);
@@ -109,7 +127,7 @@ public class Login {
     public static void Cadastrar(){
         JFrame cadFrame = new JFrame("Tela de cadastro");
         cadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        cadFrame.setSize(450, 500);
+        cadFrame.setSize(550, 550);
         cadFrame.setResizable(false);
         cadFrame.setLocationRelativeTo(null);
 
@@ -127,9 +145,17 @@ public class Login {
         dadosPessoaisPanel.setLayout(new BoxLayout(dadosPessoaisPanel, BoxLayout.Y_AXIS));
         dadosPessoaisPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Dados Pessoais", TitledBorder.LEFT, TitledBorder.TOP)); 
 
+        JPanel userNamePanel = new JPanel();
+        userNamePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5,5));
+        JLabel userNameLabel = new JLabel("Nome de usuário: (para seu login)");
+        userNamePanel.add(userNameLabel);
+        JTextField userNameField = new JTextField(20);
+        userNamePanel.add(userNameField);
+        dadosPessoaisPanel.add(userNamePanel);
+
         JPanel nomePanel = new JPanel();
         nomePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5,5));
-        JLabel nomeLabel = new JLabel("Nome de usuário:");
+        JLabel nomeLabel = new JLabel("Nome completo:");
         nomePanel.add(nomeLabel);
         JTextField nomeField = new JTextField(20);
         nomePanel.add(nomeField);
@@ -248,7 +274,8 @@ public class Login {
         cadBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                Dao account = new Dao();
+                UserDao account = new UserDao();
+                String username = userNameField.getText().trim();
                 String nome = nomeField.getText().trim();
                 String email = emailField.getText();
                 String senha = new String(senhaField.getPassword()).trim();
@@ -259,7 +286,7 @@ public class Login {
                 String estado = estadoField.getSelectedItem().toString();
                 String cep = fcepField.getText();
                 
-                if(nome.isEmpty() || email.isEmpty() || senha.isEmpty() || endereco.isEmpty() || numeroCel.trim().replace("-","").replace("(", "").replace(")", "").replace("_", "").isEmpty() || bairro.isEmpty() || cidade.isEmpty() || cep.trim().replace("-", "").isEmpty()){
+                if(username.isBlank() || nome.isEmpty() || email.isEmpty() || senha.isEmpty() || endereco.isEmpty() || numeroCel.trim().replace("-","").replace("(", "").replace(")", "").replace("_", "").isEmpty() || bairro.isEmpty() || cidade.isEmpty() || cep.trim().replace("-", "").isEmpty()){
                     JOptionPane.showMessageDialog(null,"Preencha todos os campos!");
                     return;
                 }
@@ -283,7 +310,7 @@ public class Login {
                     return;
                 }
 
-                Usuario novoUsuario = new Usuario(0, nome, email, senha, numeroCel, endereco, bairro, cidade, estado, cep, 3);
+                Usuario novoUsuario = new Usuario(0, nome, username, email, senha, numeroCel, endereco, bairro, cidade, estado, cep, 3);
                 if(account.createAccount(novoUsuario)){
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
                     new MainMenu();

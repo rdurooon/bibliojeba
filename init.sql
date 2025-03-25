@@ -6,6 +6,7 @@ CREATE TABLE `tipo_usuario` (
 
 CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) DEFAULT NULL,
   `username` varchar(30) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
@@ -24,13 +25,12 @@ CREATE TABLE `usuario` (
 CREATE TABLE `autor` (
   `id_autor` int NOT NULL AUTO_INCREMENT,
   `nome_autor` varchar(45) DEFAULT NULL,
-  `sobrenome_autor` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_autor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `editora` (
   `id_editora` int NOT NULL AUTO_INCREMENT,
-  `nome_editora` varchar(45) NOT NULL,
+  `nome_editora` varchar(45) NOT NULL,  
   PRIMARY KEY (`id_editora`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -61,4 +61,4 @@ INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (1,'admin') ON DUP
 INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (2,'biblotecario') ON DUPLICATE KEY UPDATE tipo='bibliotecario';
 INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (3,'cliente') ON DUPLICATE KEY UPDATE tipo='cliente';
 
-INSERT INTO `usuario` (`username`,`email`,`senha`,`numero_cel`,`endereco`,`bairro`,`cidade`,`estado`,`cep`,`id_tipo_usuario`) VALUES ('admin','admin@bibliojeba.com','qwe123','96987654321','Rua Fulano, 0110', 'Centro', 'Macapá', 'Amapá', '12345-678',1) ON DUPLICATE KEY UPDATE email ='admin@bibliojeba.com';
+INSERT INTO `usuario` (`username`,`email`,`senha`,`numero_cel`,`endereco`,`bairro`,`cidade`,`estado`,`cep`,`id_tipo_usuario`) VALUES ('admin','admin@bibliojeba.com','qwe123','(96)98765-4321','Rua Fulano, 0110', 'Centro', 'Macapá', 'Amapá', '12345-678',1) ON DUPLICATE KEY UPDATE email ='admin@bibliojeba.com';

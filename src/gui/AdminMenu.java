@@ -1,6 +1,11 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
+
+import gui.admin.formLivro;
 
 public class AdminMenu {
     public AdminMenu(){
@@ -14,8 +19,16 @@ public class AdminMenu {
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
         painelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        JLabel helloWorld = new JLabel("Hello World!");
-        painelPrincipal.add(helloWorld);
+        JButton btnLivro = new JButton("Livros");
+        painelPrincipal.add(btnLivro);
+
+        btnLivro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new formLivro();
+            }
+        });
+
         telaPrincipal.add(painelPrincipal);
         telaPrincipal.setVisible(true);
     }
