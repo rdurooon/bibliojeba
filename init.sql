@@ -24,26 +24,35 @@ CREATE TABLE `usuario` (
 
 CREATE TABLE `autor` (
   `id_autor` int NOT NULL AUTO_INCREMENT,
-  `nome_autor` varchar(45) DEFAULT NULL,
+  `nome_autor` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_autor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `editora` (
   `id_editora` int NOT NULL AUTO_INCREMENT,
-  `nome_editora` varchar(45) NOT NULL,  
+  `nome_editora` varchar(50) NOT NULL,  
   PRIMARY KEY (`id_editora`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `genero` (
+  `id_genero` int NOT NULL AUTO_INCREMENT,
+  `nome_genero` varchar(50) NOT NULL,  
+  PRIMARY KEY (`id_genero`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `livro` (
   `id_livro` int NOT NULL AUTO_INCREMENT,
   `titulo_livro` varchar(45) NOT NULL,
+  `id_genero` int NOT NULL,
   `id_autor` int NOT NULL,
   `id_editora` int NOT NULL,
   PRIMARY KEY (`id_livro`),
   KEY `fk_livro_autor` (`id_autor`),
   KEY `fk_livro_editora` (`id_editora`),
+  KEY `fk_livro_genero` (`id_genero`),
   CONSTRAINT `fk_livro_autor` FOREIGN KEY (`id_autor`) REFERENCES `autor` (`id_autor`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_livro_editora` FOREIGN KEY (`id_editora`) REFERENCES `editora` (`id_editora`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `fk_livro_editora` FOREIGN KEY (`id_editora`) REFERENCES `editora` (`id_editora`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_livro_genero` FOREIGN KEY (`id_genero`) REFERENCES `genero` (`id_genero`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `emprestimo` (
@@ -58,7 +67,7 @@ CREATE TABLE `emprestimo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (1,'admin') ON DUPLICATE KEY UPDATE tipo='admin';
-INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (2,'biblotecario') ON DUPLICATE KEY UPDATE tipo='bibliotecario';
+INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (2,'bibliotecario') ON DUPLICATE KEY UPDATE tipo='bibliotecario';
 INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `tipo`) VALUES (3,'cliente') ON DUPLICATE KEY UPDATE tipo='cliente';
 
 INSERT INTO `usuario` (`username`,`email`,`senha`,`numero_cel`,`endereco`,`bairro`,`cidade`,`estado`,`cep`,`id_tipo_usuario`) VALUES ('admin','admin@bibliojeba.com','qwe123','(96)98765-4321','Rua Fulano, 0110', 'Centro', 'Macapá', 'Amapá', '12345-678',1) ON DUPLICATE KEY UPDATE email ='admin@bibliojeba.com';
