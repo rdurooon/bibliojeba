@@ -51,6 +51,19 @@ public class BookDao {
         }
     }
 
+    public boolean deleteBook(Livro livro){
+        String query = "DELETE FROM livro WHERE `livro`.`id_livro` = ?";
+
+        try(Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
+            ps.setInt(1, livro.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public Livro selectBook(String titulo){
         String query = "SELECT l.id_livro, l.titulo_livro, g.id_genero, g.nome_genero, a.id_autor, a.nome_autor, e.id_editora, e.nome_editora FROM livro l JOIN autor a ON l.id_autor = a.id_autor JOIN genero g ON l.id_genero = g.id_genero JOIN editora e ON l.id_editora = e.id_editora WHERE l.titulo_livro = ?";
 
