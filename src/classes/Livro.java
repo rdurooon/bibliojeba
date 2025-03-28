@@ -6,6 +6,7 @@ public class Livro {
     private Genero genero;
     private Autor autor;
     private Editora editora;
+    private boolean disponibilidade;
     
     public Livro(String titulo, Genero genero, Autor autor, Editora editora) {
         this.titulo = titulo;

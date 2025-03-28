@@ -46,6 +46,7 @@ CREATE TABLE `livro` (
   `id_genero` int NOT NULL,
   `id_autor` int NOT NULL,
   `id_editora` int NOT NULL,
+  `disponibilidade` boolean NOT NULL,
   PRIMARY KEY (`id_livro`),
   KEY `fk_livro_autor` (`id_autor`),
   KEY `fk_livro_editora` (`id_editora`),

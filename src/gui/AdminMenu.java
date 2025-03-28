@@ -26,6 +26,7 @@ public class AdminMenu {
             @Override
             public void actionPerformed(ActionEvent e){
                 new formLivro();
+                telaPrincipal.dispose();
             }
         });
 

@@ -9,6 +9,7 @@ import classes.Editora;
 import classes.Genero;
 import classes.Livro;
 import dbconnect.BookDao;
+import gui.AdminMenu;
 
 import java.util.List;
 import java.awt.*;
@@ -25,6 +26,13 @@ public class formLivro {
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
+
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                new AdminMenu();
+            }
+        });
 
         JPanel mainPainel = new JPanel(new BorderLayout(10, 10));
         mainPainel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -97,6 +105,7 @@ public class formLivro {
         mainFrameAddLivro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrameAddLivro.setResizable(false);
         mainFrameAddLivro.setLocationRelativeTo(null);
+
 
         JPanel mainPainel = new JPanel();
         mainPainel.setLayout(new BoxLayout(mainPainel, BoxLayout.Y_AXIS));

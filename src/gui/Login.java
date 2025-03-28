@@ -88,7 +88,7 @@ public class Login {
                 if(userEntry.getUserType(login) == 1 || userEntry.getUserType(login) == 2){
                     new AdminMenu();
                 } else {
-                    new MainMenu(); 
+                    new ClientMenu(); 
                 }
 
                 mainFrame.dispose();
@@ -313,7 +313,7 @@ public class Login {
                 Usuario novoUsuario = new Usuario(0, nome, username, email, senha, numeroCel, endereco, bairro, cidade, estado, cep, 3);
                 if(account.createAccount(novoUsuario)){
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
-                    new MainMenu();
+                    new ClientMenu();
                     cadFrame.dispose();
                     mainFrame.dispose();
                 } else {
