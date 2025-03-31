@@ -125,6 +125,22 @@ public class BookDao {
         return livros;
     }
 
+    public List<Livro> selectAllAvailableBooks(){
+        List<Livro> livros = new ArrayList<>();
+        String query = "SELECT l.id_livro, l.titulo_livro, g.id_genero, g.nome_genero, a.id_autor, a.nome_autor, e.id_editora, e.nome_editora FROM livro l JOIN autor a ON l.id_autor = a.id_autor JOIN genero g ON l.id_genero = g.id_genero JOIN editora e ON l.id_editora = e.id_editora WHERE l.disponibilidade = TRUE";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()){
+            while(rs.next()){
+                Livro livro = new Livro(rs.getInt("id_livro"), rs.getString("titulo_livro"), new Genero(rs.getInt("id_genero"),rs.getString("nome_genero")),new Autor(rs.getInt("id_autor"),rs.getString("nome_autor")),new Editora(rs.getInt("id_editora"),rs.getString("nome_editora")));
+
+                livros.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livros;
+    }
+
     public int selectEditora(Editora editora){
         String query = "SELECT id_editora FROM editora WHERE nome_editora = ?";
 

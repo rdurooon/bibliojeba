@@ -13,14 +13,16 @@ public class Livro {
         this.genero = genero;
         this.autor = autor;
         this.editora = editora;
+        this.disponibilidade = true;
     }
-
+    
     public Livro(int id, String titulo, Genero genero, Autor autor, Editora editora) {
         this.id = id;
         this.titulo = titulo;
         this.genero = genero;
         this.autor = autor;
         this.editora = editora;
+        this.disponibilidade = true;
     }
 
     public int getId() {
@@ -57,5 +59,13 @@ public class Livro {
 
     public void setEditora(Editora editora) {
         this.editora = editora;
+    }
+
+    public boolean isDisponibilidade() {
+        return disponibilidade;
+    }
+
+    public void setDisponibilidade(boolean disponibilidade) {
+        this.disponibilidade = disponibilidade;
     }
 }

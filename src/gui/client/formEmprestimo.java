@@ -1,7 +1,10 @@
 package gui.client;
 import gui.ClientMenu;
+import gui.Login;
+import classes.Emprestimo;
 import classes.Livro;
 import dbconnect.BookDao;
+import dbconnect.EmprestimoDao;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -59,11 +62,18 @@ public class formEmprestimo {
         telaFazerEmprestimo.add(mainPainelEmprestimo);
         telaFazerEmprestimo.setVisible(true);
 
-        List<Livro> livrosSelecionados = new ArrayList<>();
         btnEmprestimo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){ 
-
+                int idUsuario = Login.userId;
+                EmprestimoDao emprestimoDao = new EmprestimoDao();
+                int emprestimos = emprestimoDao.emprestimosUserCount(idUsuario);
+                if(emprestimos >= 5){
+                    JOptionPane.showMessageDialog(null, "Você já atingiu o limite de 5 livros emprestados!");
+                    return;
+                }
+                
+                List<Livro> livrosSelecionados = new ArrayList<>();
                 for(int i = 0; i < modeloTabela.getRowCount(); i++){
                     boolean selecionado = (boolean) modeloTabela.getValueAt(i, 4);
                     if(selecionado){
@@ -72,8 +82,17 @@ public class formEmprestimo {
                         livrosSelecionados.add(livro);
                     }
                 }
-                for(Livro livro : livrosSelecionados){
-                    System.out.println(livro.getTitulo());
+
+                if(livrosSelecionados.size() + emprestimos > 5){
+                    JOptionPane.showMessageDialog(null, "Você só pode pegar no máximo " + (5 - emprestimos) + " livros!");
+                    return;
+                }
+
+                if(emprestimoDao.fazerEmprestimo(livrosSelecionados, idUsuario)){
+                    JOptionPane.showMessageDialog(null, "Emprestimo(s) realizado com sucesso!");
+                    carregarLivros();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo.");
                 }
             }
         });
@@ -98,7 +117,7 @@ public class formEmprestimo {
     private static void carregarLivros() {
         modeloTabela.setRowCount(0);
         BookDao bookDao = new BookDao();
-        List<Livro> livros = bookDao.selectAllBooks();
+        List<Livro> livros = bookDao.selectAllAvailableBooks();
         for (Livro livro : livros) {
             modeloTabela.addRow(new Object[] {
                     livro.getTitulo(),

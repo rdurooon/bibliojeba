@@ -1,12 +1,9 @@
 package classes;
 
-public class Usuario {
+public class Usuario  extends Pessoa{
     private int id;
-    private String nome;
     private String username;
-    private String email;
     private String password;
-    private String numeroCel;
     private String endereco;
     private String bairro;
     private String cidade;
@@ -14,15 +11,23 @@ public class Usuario {
     private String cep;
     private int idTipoUsuario;
 
-    public Usuario() {}
-
-    public Usuario(int id, String nome, String username, String email, String password, String numeroCel, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
-        this.id = id;
-        this.nome = nome;
+    public Usuario(String nome, String email, String cpf, String num_cel, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
+        super(nome, email, cpf, num_cel);
         this.username = username;
-        this.email = email;
         this.password = password;
-        this.numeroCel = numeroCel;
+        this.endereco = endereco;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.idTipoUsuario = idTipoUsuario;
+    }
+
+    public Usuario(int id, String nome, String email, String cpf, String num_cel, int id2, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
+        super(id, nome, email, cpf, num_cel);
+        id = id2;
+        this.username = username;
+        this.password = password;
         this.endereco = endereco;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -35,18 +40,6 @@ public class Usuario {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -55,28 +48,12 @@ public class Usuario {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getNumeroCel() {
-        return numeroCel;
-    }
-
-    public void setNumeroCel(String numeroCel) {
-        this.numeroCel = numeroCel;
     }
 
     public String getEndereco() {
@@ -126,4 +103,6 @@ public class Usuario {
     public void setIdTipoUsuario(int idTipoUsuario) {
         this.idTipoUsuario = idTipoUsuario;
     }
+
+    
 }

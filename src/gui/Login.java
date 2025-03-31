@@ -14,6 +14,7 @@ import dbconnect.UserDao;
 
 public class Login {
     static JFrame mainFrame = new JFrame("Tela de login");
+    public static int userId;
     public Login(){
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(330,330);
@@ -78,7 +79,8 @@ public class Login {
                 }
 
                 UserDao userEntry = new UserDao();
-                
+                userId = userEntry.getUserId(login, senha);
+
                 if(!userEntry.joinService(login, senha)){
                     JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos!", "Tentativa de login", 0);
                     errorMsgLogin.setText("Você já está cadastrado?");
@@ -183,6 +185,29 @@ public class Login {
 
         numeroCelPanel.add(numeroCelField);
         dadosPessoaisPanel.add(numeroCelPanel);
+
+        JPanel cpfPanel = new JPanel();
+        cpfPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        JLabel cpfLabel = new JLabel("Nº do CPF:");
+        cpfPanel.add(cpfLabel);
+
+        JFormattedTextField cpfField = null;
+
+        try {
+            MaskFormatter formatoCpf = new MaskFormatter("###.###.###-##");
+            formatoCpf.setPlaceholderCharacter('_');
+            cpfField = new JFormattedTextField(formatoCpf);
+            cpfField.setColumns(15);
+            cpfPanel.add(cpfField);
+        } catch (ParseException e) {
+            System.out.println("Erro ao formatar Nº Celular | " + e);
+            cpfField = new JFormattedTextField(15);
+            cpfPanel.add(cpfField);
+        }
+        dadosPessoaisPanel.add(cpfPanel);
+
+        cpfPanel.add(cpfField);
+        dadosPessoaisPanel.add(cpfPanel);
         
         JPanel emailPanel = new JPanel();
         emailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5,5));
@@ -271,6 +296,7 @@ public class Login {
 
         JFormattedTextField fcepField = cepField;
         JFormattedTextField fnumeroCelField = numeroCelField;
+        JFormattedTextField fcpfField = cpfField;
         cadBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -284,13 +310,19 @@ public class Login {
                 String bairro = bairroField.getText().trim();
                 String cidade = cidadeField.getText().trim();
                 String estado = estadoField.getSelectedItem().toString();
-                String cep = fcepField.getText();
+                String cep = fcepField.getText().trim();
+                String cpf = fcpfField.getText().trim();
                 
-                if(username.isBlank() || nome.isEmpty() || email.isEmpty() || senha.isEmpty() || endereco.isEmpty() || numeroCel.trim().replace("-","").replace("(", "").replace(")", "").replace("_", "").isEmpty() || bairro.isEmpty() || cidade.isEmpty() || cep.trim().replace("-", "").isEmpty()){
+                if(username.isBlank() || nome.isEmpty() || email.isEmpty() || senha.isEmpty() || endereco.isEmpty() || numeroCel.trim().replace("-","").replace("(", "").replace(")", "").replace("_", "").isEmpty() || bairro.isEmpty() || cidade.isEmpty() || cep.trim().replace("-", "").isEmpty() || cpf.replace("-","").replace(".","").isEmpty()){
                     JOptionPane.showMessageDialog(null,"Preencha todos os campos!");
                     return;
                 }
                 
+                if(!cpf.matches("\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")){
+                    JOptionPane.showMessageDialog(null, "CPF inválido! Insira um CPF válido.");
+                    return;
+                }
+
                 if(numeroCel.length() < 11 || numeroCel.length() > 15 || !numeroCel.matches("\\(\\d{2}\\)\\d{5}-\\d{4}")){
                     JOptionPane.showMessageDialog(null, "N° de celular invalido! Insira outro número.");
                     return;
@@ -310,7 +342,7 @@ public class Login {
                     return;
                 }
 
-                Usuario novoUsuario = new Usuario(0, nome, username, email, senha, numeroCel, endereco, bairro, cidade, estado, cep, 3);
+                Usuario novoUsuario = new Usuario(nome, email, numeroCel, cep, username, senha, endereco, bairro, cidade, estado, cep, 3);
                 if(account.createAccount(novoUsuario)){
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
                     new ClientMenu();
