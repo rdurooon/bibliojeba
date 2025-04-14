@@ -8,6 +8,11 @@ public class Livro {
     private Editora editora;
     private boolean disponibilidade;
     
+    public Livro(int id, String titulo){
+        this.id = id;
+        this.titulo = titulo;
+    }
+    
     public Livro(String titulo, Genero genero, Autor autor, Editora editora) {
         this.titulo = titulo;
         this.genero = genero;

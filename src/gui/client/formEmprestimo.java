@@ -53,14 +53,23 @@ public class formEmprestimo {
 
         carregarLivros();
 
-
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnEmprestimo = new JButton("Realizar empréstimo");
         btnPanel.add(btnEmprestimo);
+        JButton btnVoltar = new JButton("Voltar");
+        btnPanel.add(btnVoltar);
         mainPainelEmprestimo.add(btnPanel, BorderLayout.SOUTH);
 
         telaFazerEmprestimo.add(mainPainelEmprestimo);
         telaFazerEmprestimo.setVisible(true);
+
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                telaFazerEmprestimo.dispose();
+                new ClientMenu();
+            }
+        });
 
         btnEmprestimo.addActionListener(new ActionListener() {
             @Override
@@ -111,6 +120,91 @@ public class formEmprestimo {
                 new ClientMenu();
             }
         });
+
+        JPanel mainPainelDevolucao = new JPanel(new BorderLayout(10,10));
+        mainPainelDevolucao.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        DefaultTableModel modeloDevolucao = new DefaultTableModel(new String[]{"Título","Selecionar"},0){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return column == 1;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex){
+                return columnIndex == 1 ? Boolean.class : String.class;
+            }
+        };
+
+        JTable tabelaDevolucao = new JTable(modeloDevolucao);
+        tabelaDevolucao.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(tabelaDevolucao);
+        mainPainelDevolucao.add(scrollPane, BorderLayout.CENTER);
+
+        EmprestimoDao emprestimoDao = new EmprestimoDao();
+        List<Livro> livrosEmprestimos = emprestimoDao.buscarLivrosEmprestados(Login.userId);
+        for(Livro livro : livrosEmprestimos){
+            modeloDevolucao.addRow(new Object[]{
+                livro.getTitulo(),
+                false
+            });
+        }
+
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton btnDevolver = new JButton("Devolver livro(s)");
+        btnPanel.add(btnDevolver);
+        JButton btnVoltar = new JButton("Voltar");
+        btnPanel.add(btnVoltar);
+        mainPainelDevolucao.add(btnPanel, BorderLayout.SOUTH);
+
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                telaDesfazerEmprestimo.dispose();
+                new ClientMenu();
+            }
+        });
+
+        btnDevolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                List<Livro> livrosSelecionados = new ArrayList<>();
+                for(int i = 0; i < modeloDevolucao.getRowCount(); i++){
+                    boolean selecionado = (boolean) modeloDevolucao.getValueAt(i, 1);
+                    if(selecionado){
+                        String titulo = (String) modeloDevolucao.getValueAt(i, 0);
+                        Livro livro = new BookDao().selectBook(titulo);
+                        livrosSelecionados.add(livro);
+                    } 
+                }
+
+                if(livrosSelecionados.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Selecione pelo menos um livro para ser devolvido!");
+                    return;
+                }
+
+                if(emprestimoDao.devolverLivros(livrosSelecionados, Login.userId)){
+                    JOptionPane.showMessageDialog(null, "Livro(s) devolvido(s) com sucesso!");
+
+                    modeloDevolucao.setRowCount(0);
+
+                    List<Livro> atualizarLivros = emprestimoDao.buscarLivrosEmprestados(Login.userId);
+                    for(Livro livro : atualizarLivros){
+                        modeloDevolucao.addRow(new Object[]{
+                            livro.getTitulo(),
+                            false
+                        });
+                    }
+
+                    return;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Falha ao tentar devolver livro(s)! Tente novamente.");
+                    return;
+                }
+            }
+        });
+
+        telaDesfazerEmprestimo.add(mainPainelDevolucao);
         telaDesfazerEmprestimo.setVisible(true);
     }
 

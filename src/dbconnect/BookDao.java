@@ -140,6 +140,7 @@ public class BookDao {
         }
         return livros;
     }
+    
 
     public int selectEditora(Editora editora){
         String query = "SELECT id_editora FROM editora WHERE nome_editora = ?";

@@ -15,6 +15,7 @@ import dbconnect.UserDao;
 public class Login {
     static JFrame mainFrame = new JFrame("Tela de login");
     public static int userId;
+    public static String userName;
     public Login(){
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(330,330);
@@ -87,6 +88,7 @@ public class Login {
                     return;
                 }
 
+                userName = loginField.getText();
                 if(userEntry.getUserType(login) == 1 || userEntry.getUserType(login) == 2){
                     new AdminMenu();
                 } else {
