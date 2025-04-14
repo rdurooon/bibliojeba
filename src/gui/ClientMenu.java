@@ -1,10 +1,10 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import dbconnect.EmprestimoDao;
 import gui.client.formEmprestimo;
+import gui.client.formUser;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -37,10 +37,10 @@ public class ClientMenu {
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         userPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLUE), "Usuário"));
         JButton btnMudarDados = new JButton("Mudar dados da conta");
-        JButton btnMudarEndereco = new JButton("Mudar senha");
+        JButton btnMudarSenha = new JButton("Mudar senha");
         JButton btnDeletarConta = new JButton("Deletar conta");
         userPanel.add(btnMudarDados);
-        userPanel.add(btnMudarEndereco);
+        userPanel.add(btnMudarSenha);
         userPanel.add(btnDeletarConta);
         
         btnPanel.add(livroPanel);
@@ -51,6 +51,30 @@ public class ClientMenu {
             @Override
             public void actionPerformed(ActionEvent e){
                 formEmprestimo.fazerEmprestimo();
+                telaPrincipal.dispose();
+            }
+        });
+
+        btnMudarDados.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new formUser().mudarDados();
+                telaPrincipal.dispose();
+            }
+        });
+
+        btnMudarSenha.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new formUser().mudarSenha();
+                telaPrincipal.dispose();
+            }
+        });
+
+        btnDeletarConta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new formUser().deletarConta();
                 telaPrincipal.dispose();
             }
         });

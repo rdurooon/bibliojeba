@@ -13,10 +13,11 @@ import classes.Usuario;
 import dbconnect.UserDao;
 
 public class Login {
-    static JFrame mainFrame = new JFrame("Tela de login");
+    private JFrame mainFrame;
     public static int userId;
     public static String userName;
     public Login(){
+        mainFrame = new JFrame("Tela de login");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(330,330);
         mainFrame.setResizable(false);
@@ -128,7 +129,7 @@ public class Login {
         mainFrame.setVisible(true);
     }
 
-    public static void Cadastrar(){
+    public void Cadastrar(){
         JFrame cadFrame = new JFrame("Tela de cadastro");
         cadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         cadFrame.setSize(550, 550);
