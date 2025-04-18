@@ -195,7 +195,6 @@ public class UserDao {
     }
 
     public boolean changeData(Usuario usuario){
-        int idUsuario = getUserId(Login.userName);
         String queryPessoa = "UPDATE pessoa SET nome = ?, cpf = ?, numero_cel = ? WHERE id_pessoa = (SELECT id_pessoa FROM usuario WHERE username = ?)";
         String queryUser = "UPDATE usuario SET endereco = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE username = ?";
 

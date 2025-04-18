@@ -3,14 +3,15 @@ package gui;
 import javax.swing.*;
 
 import dbconnect.EmprestimoDao;
+import gui.admin.formLivro;
 import gui.client.formEmprestimo;
 import gui.client.formUser;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public class ClientMenu {
-    public ClientMenu(){
+public class MainMenu {
+    public MainMenu(int userType){
         JFrame telaPrincipal = new JFrame("Tela principal");
         telaPrincipal.setSize(400,400);
         telaPrincipal.setResizable(false);
@@ -33,18 +34,62 @@ public class ClientMenu {
         JButton btnDesemprestimo = new JButton("Devolver livro");
         livroPanel.add(btnEmprestimo);
         livroPanel.add(btnDesemprestimo);
-
-        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        userPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLUE), "Usuário"));
-        JButton btnMudarDados = new JButton("Mudar dados da conta");
-        JButton btnMudarSenha = new JButton("Mudar senha");
-        JButton btnDeletarConta = new JButton("Deletar conta");
-        userPanel.add(btnMudarDados);
-        userPanel.add(btnMudarSenha);
-        userPanel.add(btnDeletarConta);
-        
         btnPanel.add(livroPanel);
-        btnPanel.add(userPanel);
+
+        if(userType == 3){
+            JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            userPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLUE), "Usuário"));
+            JButton btnMudarDados = new JButton("Mudar dados da conta");
+            JButton btnMudarSenha = new JButton("Mudar senha");
+            JButton btnDeletarConta = new JButton("Deletar conta");
+            userPanel.add(btnMudarDados);
+            userPanel.add(btnMudarSenha);
+            userPanel.add(btnDeletarConta);
+            btnPanel.add(userPanel);
+
+            btnMudarDados.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    new formUser().mudarDados();
+                    telaPrincipal.dispose();
+                }
+            });
+    
+            btnMudarSenha.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    new formUser().mudarSenha();
+                    telaPrincipal.dispose();
+                }
+            });
+    
+            btnDeletarConta.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    new formUser().deletarConta();
+                    telaPrincipal.dispose();
+                }
+            });
+        }
+
+        if(userType == 1 || userType == 2){
+            JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            adminPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.RED), "Administração"));
+            JButton btnLivro = new JButton("Livros");
+            adminPanel.add(btnLivro);
+            btnPanel.add(adminPanel);
+
+            btnLivro.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    telaPrincipal.dispose();
+                    new formLivro();
+                }
+            });
+
+
+        }
+
         painelPrincipal.add(btnPanel, BorderLayout.CENTER);
 
         btnEmprestimo.addActionListener(new ActionListener() {
@@ -55,29 +100,6 @@ public class ClientMenu {
             }
         });
 
-        btnMudarDados.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                new formUser().mudarDados();
-                telaPrincipal.dispose();
-            }
-        });
-
-        btnMudarSenha.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                new formUser().mudarSenha();
-                telaPrincipal.dispose();
-            }
-        });
-
-        btnDeletarConta.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                new formUser().deletarConta();
-                telaPrincipal.dispose();
-            }
-        });
         
         btnDesemprestimo.addActionListener(new ActionListener() {
             @Override

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import classes.Livro;
-import dbconnect.dbConnection;
 
 public class EmprestimoDao {
     public boolean fazerEmprestimo(List<Livro> livros, int idUsuario){

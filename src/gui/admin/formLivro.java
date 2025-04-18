@@ -3,17 +3,17 @@ package gui.admin;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import java.awt.*;
+import java.awt.event.*;
 
 import classes.Autor;
 import classes.Editora;
 import classes.Genero;
 import classes.Livro;
 import dbconnect.BookDao;
-import gui.AdminMenu;
-
-import java.util.List;
-import java.awt.*;
-import java.awt.event.*;
+import gui.Login;
+import gui.MainMenu;
 
 public class formLivro {
     private JFrame mainFrame;
@@ -30,7 +30,7 @@ public class formLivro {
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
-                new AdminMenu();
+                new MainMenu(Login.userType);
             }
         });
 

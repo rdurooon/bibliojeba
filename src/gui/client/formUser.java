@@ -3,19 +3,17 @@ package gui.client;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
-
-import classes.Emprestimo;
-import classes.Livro;
-import classes.Usuario;
-import dbconnect.EmprestimoDao;
-import dbconnect.UserDao;
-import gui.ClientMenu;
-import gui.Login;
-
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
+
+import classes.Livro;
+import classes.Usuario;
+import dbconnect.EmprestimoDao;
+import dbconnect.UserDao;
+import gui.MainMenu;
+import gui.Login;
 
 public class formUser {
     public void mudarDados(){
@@ -27,7 +25,7 @@ public class formUser {
         mainTelaMudarDados.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e){
-                new ClientMenu();
+                new MainMenu(Login.userType);
             };
         });
 
@@ -208,7 +206,7 @@ public class formUser {
         mainTelaMudarSenha.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e){
-                new ClientMenu();
+                new MainMenu(Login.userType);
             };
         });
 
@@ -349,7 +347,7 @@ public class formUser {
             @Override
             public void actionPerformed(ActionEvent e){
                 mainTelaDeletarConta.dispose();
-                new ClientMenu();
+                new MainMenu(Login.userType);
             }
         });
 

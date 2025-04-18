@@ -1,7 +1,6 @@
 package gui.client;
-import gui.ClientMenu;
+import gui.MainMenu;
 import gui.Login;
-import classes.Emprestimo;
 import classes.Livro;
 import dbconnect.BookDao;
 import dbconnect.EmprestimoDao;
@@ -27,7 +26,7 @@ public class formEmprestimo {
         telaFazerEmprestimo.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
-                new ClientMenu();
+                new MainMenu(Login.userType);
             }
         });
 
@@ -67,7 +66,7 @@ public class formEmprestimo {
             @Override
             public void actionPerformed(ActionEvent e){
                 telaFazerEmprestimo.dispose();
-                new ClientMenu();
+                new MainMenu(Login.userType);
             }
         });
 
@@ -117,7 +116,7 @@ public class formEmprestimo {
         telaDesfazerEmprestimo.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
-                new ClientMenu();
+                new MainMenu(Login.userType);
             }
         });
 
@@ -163,7 +162,7 @@ public class formEmprestimo {
             @Override
             public void actionPerformed(ActionEvent e){
                 telaDesfazerEmprestimo.dispose();
-                new ClientMenu();
+                new MainMenu(Login.userType);
             }
         });
 
@@ -180,7 +179,7 @@ public class formEmprestimo {
                 if(emprestimoDao.devolverLivros(livrosEmprestados, Login.userId)){
                     JOptionPane.showMessageDialog(null, "Livro(s) devolvido(s) com sucesso!");
                     telaDesfazerEmprestimo.dispose();
-                    new ClientMenu();
+                    new MainMenu(Login.userType);
                     return;
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro ao tentar devolver todos os livros! Tente novamente.");

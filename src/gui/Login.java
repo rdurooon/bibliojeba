@@ -15,6 +15,7 @@ import dbconnect.UserDao;
 public class Login {
     private JFrame mainFrame;
     public static int userId;
+    public static int userType;
     public static String userName;
     public Login(){
         mainFrame = new JFrame("Tela de login");
@@ -90,11 +91,8 @@ public class Login {
                 }
 
                 userName = loginField.getText();
-                if(userEntry.getUserType(login) == 1 || userEntry.getUserType(login) == 2){
-                    new AdminMenu();
-                } else {
-                    new ClientMenu(); 
-                }
+                userType = userEntry.getUserType(login);
+                new MainMenu(userType); 
 
                 mainFrame.dispose();
             }
@@ -350,7 +348,7 @@ public class Login {
                     userId = new UserDao().getUserId(username);
                     userName = username;
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
-                    new ClientMenu();
+                    new MainMenu(3);
                     cadFrame.dispose();
                     mainFrame.dispose();
                 } else {
