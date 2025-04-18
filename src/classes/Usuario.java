@@ -11,6 +11,15 @@ public class Usuario  extends Pessoa{
     private String cep;
     private int idTipoUsuario;
 
+    public Usuario(String nome, String cpf, String num_cel, String endereco, String bairro, String cidade, String estado, String cep){
+        super(nome, cpf, num_cel);
+        this.endereco = endereco;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+    }
+
     public Usuario(String nome, String email, String cpf, String num_cel, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         super(nome, email, cpf, num_cel);
         this.username = username;
@@ -25,7 +34,7 @@ public class Usuario  extends Pessoa{
 
     public Usuario(int id, String nome, String email, String cpf, String num_cel, int id2, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         super(id, nome, email, cpf, num_cel);
-        id = id2;
+        this.id = id2;
         this.username = username;
         this.password = password;
         this.endereco = endereco;
@@ -103,6 +112,4 @@ public class Usuario  extends Pessoa{
     public void setIdTipoUsuario(int idTipoUsuario) {
         this.idTipoUsuario = idTipoUsuario;
     }
-
-    
 }

@@ -1,5 +1,7 @@
 package classes;
 
+import java.util.Objects;
+
 public class Pessoa {
     private int id;
     private String nome;
@@ -7,6 +9,12 @@ public class Pessoa {
     private String cpf;
     private String num_cel;
     
+    public Pessoa(String nome, String cpf, String num_cel){
+        this.nome = nome;
+        this.cpf = cpf;
+        this.num_cel = num_cel;
+    }
+
     public Pessoa(String nome, String email, String cpf, String num_cel) {
         this.nome = nome;
         this.email = email;
@@ -58,5 +66,4 @@ public class Pessoa {
         this.num_cel = num_cel;
     }
 
-    
 }

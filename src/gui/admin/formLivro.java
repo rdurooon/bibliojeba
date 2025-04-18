@@ -190,6 +190,10 @@ public class formLivro {
                     return;
                 }
 
+                tituloField.setText("");
+                generoField.setText("");
+                editoraField.setText("");
+                autorField.setText("");
                 JOptionPane.showMessageDialog(null, "Livro adicionado com sucesso!");
                 carregarLivros();
             }

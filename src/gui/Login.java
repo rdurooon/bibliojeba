@@ -81,7 +81,7 @@ public class Login {
                 }
 
                 UserDao userEntry = new UserDao();
-                userId = userEntry.getUserId(login, senha);
+                userId = userEntry.getUserId(login);
 
                 if(!userEntry.joinService(login, senha)){
                     JOptionPane.showMessageDialog(null, "Login e/ou senha incorretos!", "Tentativa de login", 0);
@@ -345,8 +345,10 @@ public class Login {
                     return;
                 }
 
-                Usuario novoUsuario = new Usuario(nome, email, numeroCel, cep, username, senha, endereco, bairro, cidade, estado, cep, 3);
+                Usuario novoUsuario = new Usuario(nome, email, cpf, numeroCel, username, senha, endereco, bairro, cidade, estado, cep, 3);
                 if(account.createAccount(novoUsuario)){
+                    userId = new UserDao().getUserId(username);
+                    userName = username;
                     JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!\nBem-vindo(a) " + nome);
                     new ClientMenu();
                     cadFrame.dispose();

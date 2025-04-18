@@ -153,6 +153,8 @@ public class formEmprestimo {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnDevolver = new JButton("Devolver livro(s)");
         btnPanel.add(btnDevolver);
+        JButton btnDevolverTodos = new JButton("Devolver tudo");
+        btnPanel.add(btnDevolverTodos);
         JButton btnVoltar = new JButton("Voltar");
         btnPanel.add(btnVoltar);
         mainPainelDevolucao.add(btnPanel, BorderLayout.SOUTH);
@@ -162,6 +164,28 @@ public class formEmprestimo {
             public void actionPerformed(ActionEvent e){
                 telaDesfazerEmprestimo.dispose();
                 new ClientMenu();
+            }
+        });
+
+        btnDevolverTodos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                List<Livro> livrosEmprestados = new ArrayList<>();
+                for(int i = 0; i < modeloDevolucao.getRowCount(); i++){
+                    String titulo = (String) modeloDevolucao.getValueAt(i, 0);
+                    Livro livro = new BookDao().selectBook(titulo);
+                    livrosEmprestados.add(livro);
+                }
+
+                if(emprestimoDao.devolverLivros(livrosEmprestados, Login.userId)){
+                    JOptionPane.showMessageDialog(null, "Livro(s) devolvido(s) com sucesso!");
+                    telaDesfazerEmprestimo.dispose();
+                    new ClientMenu();
+                    return;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Erro ao tentar devolver todos os livros! Tente novamente.");
+                    return;
+                }
             }
         });
 
