@@ -4,6 +4,7 @@ import gui.Login;
 import classes.Livro;
 import dbconnect.BookDao;
 import dbconnect.EmprestimoDao;
+import dbconnect.UserDao;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -70,40 +71,172 @@ public class formEmprestimo {
             }
         });
 
-        btnEmprestimo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){ 
-                int idUsuario = Login.userId;
-                EmprestimoDao emprestimoDao = new EmprestimoDao();
-                int emprestimos = emprestimoDao.emprestimosUserCount(idUsuario);
-                if(emprestimos >= 5){
-                    JOptionPane.showMessageDialog(null, "Você já atingiu o limite de 5 livros emprestados!");
-                    return;
-                }
-                
-                List<Livro> livrosSelecionados = new ArrayList<>();
-                for(int i = 0; i < modeloTabela.getRowCount(); i++){
-                    boolean selecionado = (boolean) modeloTabela.getValueAt(i, 4);
-                    if(selecionado){
-                        String titulo = (String) modeloTabela.getValueAt(i, 0);
-                        Livro livro = new BookDao().selectBook(titulo);
-                        livrosSelecionados.add(livro);
+        if(Login.userType == 3){
+
+            btnEmprestimo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){ 
+                    int idUsuario = Login.userId;
+                    EmprestimoDao emprestimoDao = new EmprestimoDao();
+                    int emprestimos = emprestimoDao.emprestimosUserCount(idUsuario);
+                    if(emprestimos >= 5){
+                        JOptionPane.showMessageDialog(null, "Você já atingiu o limite de 5 livros emprestados!");
+                        return;
+                    }
+                    
+                    List<Livro> livrosSelecionados = new ArrayList<>();
+                    for(int i = 0; i < modeloTabela.getRowCount(); i++){
+                        boolean selecionado = (boolean) modeloTabela.getValueAt(i, 4);
+                        if(selecionado){
+                            String titulo = (String) modeloTabela.getValueAt(i, 0);
+                            Livro livro = new BookDao().selectBook(titulo);
+                            livrosSelecionados.add(livro);
+                        }
+                    }
+                    
+                    if(livrosSelecionados == null || livrosSelecionados.size() < 1){
+                        JOptionPane.showMessageDialog(null, "Selecione pelo menos um livro!");
+                        return;
+                    }
+                    
+                    if(livrosSelecionados.size() + emprestimos > 5){
+                        JOptionPane.showMessageDialog(null, "Você só pode pegar no máximo " + (5 - emprestimos) + " livros!");
+                        return;
+                    }
+    
+                    if(emprestimoDao.fazerEmprestimo(livrosSelecionados, idUsuario)){
+                        JOptionPane.showMessageDialog(null, "Emprestimo(s) realizado com sucesso!");
+                        carregarLivros();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo.");
                     }
                 }
+            });
+        }
+        
+        if(Login.userType == 1 || Login.userType == 2){
+            btnEmprestimo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    JDialog caixaDialogo = new JDialog((Frame) null, "Escolher destinatário", true);
+                    caixaDialogo.setLayout(new GridLayout(4,3));
+                    caixaDialogo.setSize(300,175);
+                    caixaDialogo.setLocationRelativeTo(null);
 
-                if(livrosSelecionados.size() + emprestimos > 5){
-                    JOptionPane.showMessageDialog(null, "Você só pode pegar no máximo " + (5 - emprestimos) + " livros!");
-                    return;
-                }
+                    JPanel emprestimoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+                    JLabel emprestimoTxt = new JLabel("Deseja fazer o emprestimo para quem?");
+                    emprestimoPanel.add(emprestimoTxt);
+                    
+                    JPanel rbPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+                    JRadioButton rbParaMim = new JRadioButton("Para mim");
+                    JRadioButton rbParaOutro = new JRadioButton("Para outra pessoa");
+                    ButtonGroup btnGrupo = new ButtonGroup();
+                    btnGrupo.add(rbParaMim);
+                    btnGrupo.add(rbParaOutro);
+                    rbPanel.add(rbParaMim);
+                    rbPanel.add(rbParaOutro);
+                    rbParaMim.setSelected(true);
 
-                if(emprestimoDao.fazerEmprestimo(livrosSelecionados, idUsuario)){
-                    JOptionPane.showMessageDialog(null, "Emprestimo(s) realizado com sucesso!");
-                    carregarLivros();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo.");
+                    JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                    JLabel usernameTxt = new JLabel("Username:");
+                    JTextField usernameField = new JTextField(10);
+                    usernameField.setEnabled(false);
+                    usernameTxt.setForeground(Color.GRAY);
+                    usernamePanel.add(usernameTxt);
+                    usernamePanel.add(usernameField);
+
+                    rbParaOutro.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+                            usernameTxt.setForeground(Color.BLACK);;
+                            usernameField.setEnabled(true);
+                        }
+                    });
+                    
+                    rbParaMim.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+                            usernameTxt.setForeground(Color.GRAY);;
+                            usernameField.setEnabled(false);
+                        }
+                    });
+
+                    JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                    JButton btnConfirmar = new JButton("Confirmar");
+                    JButton btnCancelar = new JButton("Cancelar");
+                    btnPanel.add(btnConfirmar);
+                    btnPanel.add(btnCancelar);
+                    
+                    caixaDialogo.add(emprestimoPanel);
+                    caixaDialogo.add(rbPanel);
+                    caixaDialogo.add(usernamePanel);
+                    caixaDialogo.add(btnPanel);
+
+                    btnCancelar.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+                            caixaDialogo.dispose();
+                        }
+                    });
+
+                    btnConfirmar.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+                            int idUser;
+
+                            if(rbParaMim.isSelected()){
+                                idUser = Login.userId;
+                            } else {
+                                String username = usernameField.getText().trim();
+                                if(username.isEmpty()){
+                                    JOptionPane.showMessageDialog(null, "Digite um username válido!");
+                                    return;
+                                }
+
+                                idUser = new UserDao().getUserId(username);
+                                if(idUser == -1){
+                                    JOptionPane.showMessageDialog(null, "Usuário não encontrado! Tente novamente.");
+                                    return;
+                                }
+                            }
+
+                            EmprestimoDao emprestimoDao = new EmprestimoDao();
+                            int emprestimos = emprestimoDao.emprestimosUserCount(idUser);
+                            if(emprestimos >= 5){
+                                JOptionPane.showMessageDialog(null, "Usuário já atingiu o limite de 5 livros emprestados!");
+                                return;
+                            }
+                            
+                            List<Livro> livrosSelecionados = new ArrayList<>();
+                            for(int i = 0; i < modeloTabela.getRowCount(); i++){
+                                boolean selecionado = (boolean) modeloTabela.getValueAt(i, 4);
+                                if(selecionado){
+                                    String titulo = (String) modeloTabela.getValueAt(i, 0);
+                                    Livro livro = new BookDao().selectBook(titulo);
+                                    livrosSelecionados.add(livro);
+                                }
+                            }
+
+                            if(livrosSelecionados.isEmpty()){
+                                JOptionPane.showMessageDialog(null, "Selecione pelo menos um livro!");
+                                return;
+                            }
+
+                            if(!emprestimoDao.fazerEmprestimo(livrosSelecionados, idUser)){
+                                JOptionPane.showMessageDialog(null, "Não foi possível realizar empréstimo! Tente novamente.");
+                                return;
+                            }
+
+                            JOptionPane.showMessageDialog(null, "Emprestimo(s) realizado(s) com sucesso!");
+                            carregarLivros();
+                            caixaDialogo.dispose();
+                        }
+                    });
+
+                    caixaDialogo.setVisible(true);
                 }
-            }
-        });
+            });
+        }
     }
     
     public static void desfazerEmprestimo(){
