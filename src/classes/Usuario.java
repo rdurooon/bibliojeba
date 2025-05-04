@@ -1,6 +1,6 @@
 package classes;
 
-public class Usuario  extends Pessoa{
+public class Usuario extends Pessoa{
     private int id;
     private String username;
     private String password;
@@ -10,7 +10,12 @@ public class Usuario  extends Pessoa{
     private String estado;
     private String cep;
     private int idTipoUsuario;
+    private Pessoa pessoa;
 
+    public Usuario(){
+        super();
+    }
+    
     public Usuario(String nome, String cpf, String num_cel, String endereco, String bairro, String cidade, String estado, String cep){
         super(nome, cpf, num_cel);
         this.endereco = endereco;
@@ -19,7 +24,7 @@ public class Usuario  extends Pessoa{
         this.estado = estado;
         this.cep = cep;
     }
-
+    
     public Usuario(String nome, String email, String cpf, String num_cel, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         super(nome, email, cpf, num_cel);
         this.username = username;
@@ -31,7 +36,7 @@ public class Usuario  extends Pessoa{
         this.cep = cep;
         this.idTipoUsuario = idTipoUsuario;
     }
-
+    
     public Usuario(int id, String nome, String email, String cpf, String num_cel, int id2, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         super(id, nome, email, cpf, num_cel);
         this.id = id2;
@@ -43,6 +48,10 @@ public class Usuario  extends Pessoa{
         this.estado = estado;
         this.cep = cep;
         this.idTipoUsuario = idTipoUsuario;
+    }
+    
+    public void setId(int id){
+        this.id = id;
     }
 
     public int getId() {
@@ -111,5 +120,13 @@ public class Usuario  extends Pessoa{
 
     public void setIdTipoUsuario(int idTipoUsuario) {
         this.idTipoUsuario = idTipoUsuario;
+    }
+
+    public void setPessoa(Pessoa pessoa){
+        this.pessoa = pessoa;
+    }
+
+    public Pessoa getPessoa(){
+        return pessoa;
     }
 }

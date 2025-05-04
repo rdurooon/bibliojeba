@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import dbconnect.EmprestimoDao;
 import gui.admin.formLivro;
+import gui.admin.formUsuarios;
 import gui.client.formEmprestimo;
 import gui.client.formUser;
 
@@ -76,7 +77,9 @@ public class MainMenu {
             JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
             adminPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.RED), "Administração"));
             JButton btnLivro = new JButton("Livros");
+            JButton btnUsuarios = new JButton("Usuários");
             adminPanel.add(btnLivro);
+            adminPanel.add(btnUsuarios);
             btnPanel.add(adminPanel);
 
             btnLivro.addActionListener(new ActionListener() {
@@ -84,6 +87,14 @@ public class MainMenu {
                 public void actionPerformed(ActionEvent e){
                     telaPrincipal.dispose();
                     new formLivro();
+                }
+            });
+
+            btnUsuarios.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    telaPrincipal.dispose();
+                    new formUsuarios();
                 }
             });
 

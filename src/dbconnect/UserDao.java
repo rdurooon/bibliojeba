@@ -1,7 +1,8 @@
 package dbconnect;
 
 import java.sql.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import classes.Usuario;
 import gui.Login;
 
@@ -24,7 +25,7 @@ public class UserDao {
 
     public Usuario getUser(String login){
         Usuario usuario = null;
-        String query = "SELECT u.id_usuario, p.id_pessoa, p.nome, p.email, p.cpf, p.numero_cel, u.username, u.senha, u.endereco, u.bairro, u.cidade, u.estado, u.cep, u.id_tipo_usuario FROM usuario u JOIN pessoa p ON u.id_pessoa = p.id_pessoa WHERE u.username = ?";
+        String query = "SELECT user.id_usuario, p.id_pessoa, p.nome, p.email, p.cpf, p.numero_cel, user.username, user.senha, user.endereco, user.bairro, user.cidade, user.estado, user.cep, user.id_tipo_usuario FROM usuario u JOIN pessoa p ON user.id_pessoa = p.id_pessoa WHERE user.username = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
             ps.setString(1, login);
@@ -226,5 +227,70 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Usuario> listarTodosUsuarios(){
+        List<Usuario> lista = new ArrayList<>();
+        String query = "SELECT * FROM usuario INNER JOIN pessoa ON usuario.id_pessoa = pessoa.id_pessoa ORDER BY usuario.id_usuario";
+
+        try(Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()){
+            while(rs.next()){
+                Usuario user = new Usuario();
+                
+                user.setId(rs.getInt("id_usuario"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("senha"));
+                user.setEndereco(rs.getString("endereco"));
+                user.setBairro(rs.getString("bairro"));
+                user.setCidade(rs.getString("estado"));
+                user.setEstado(rs.getString("estado"));
+                user.setCep(rs.getString("cep"));
+                user.setIdTipoUsuario(rs.getInt("id_tipo_usuario"));
+                user.setId(rs.getInt("id_pessoa"));
+                user.setNome(rs.getString("nome"));
+                user.setEmail(rs.getString("email"));
+                user.setCpf(rs.getString("cpf"));
+                user.setNum_cel(rs.getString("numero_cel"));
+
+                lista.add(user);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public List<Usuario> buscarPorUsernamePrefixo(String prefixo){
+        List<Usuario> list = new ArrayList<>();
+        String query = "SELECT * FROM usuario INNER JOIN pessoa ON usuario.id_pessoa = pessoa.id_pessoa WHERE username LIKE ? ORDER BY username ASC";
+
+        try(Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
+            ps.setString(1, prefixo + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                Usuario user = new Usuario();
+
+                user.setId(rs.getInt("id_usuario"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("senha"));
+                user.setEndereco(rs.getString("endereco"));
+                user.setBairro(rs.getString("bairro"));
+                user.setCidade(rs.getString("cidade"));
+                user.setEstado(rs.getString("estado"));
+                user.setCep(rs.getString("cep"));
+                user.setIdTipoUsuario(rs.getInt("id_tipo_usuario"));
+                user.setId(rs.getInt("id_pessoa"));
+                user.setNome(rs.getString("nome"));
+                user.setEmail(rs.getString("email"));
+                user.setCpf(rs.getString("cpf"));
+                user.setNum_cel(rs.getString("numero_cel"));
+
+                list.add(user);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }

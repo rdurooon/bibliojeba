@@ -7,6 +7,8 @@ public class Pessoa {
     private String cpf;
     private String num_cel;
     
+    public Pessoa(){}
+
     public Pessoa(String nome, String cpf, String num_cel){
         this.nome = nome;
         this.cpf = cpf;
@@ -26,6 +28,10 @@ public class Pessoa {
         this.email = email;
         this.cpf = cpf;
         this.num_cel = num_cel;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public int getId() {
