@@ -68,6 +68,7 @@ CREATE TABLE `emprestimo` (
   `id_emprestimo` int NOT NULL AUTO_INCREMENT,
   `id_usuario` int NOT NULL,
   `id_livro` int NOT NULL,
+  `notificacao` tinyint NOT NULL,
   PRIMARY KEY (`id_emprestimo`),
   KEY `fk_emprestimo_usuario` (`id_usuario`),
   KEY `fk_emprestimo_livro` (`id_livro`),

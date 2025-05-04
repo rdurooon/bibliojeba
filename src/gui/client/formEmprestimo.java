@@ -26,7 +26,7 @@ public class formEmprestimo {
         
         telaFazerEmprestimo.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosed(WindowEvent e){
                 new MainMenu(Login.userType);
             }
         });
@@ -67,7 +67,6 @@ public class formEmprestimo {
             @Override
             public void actionPerformed(ActionEvent e){
                 telaFazerEmprestimo.dispose();
-                new MainMenu(Login.userType);
             }
         });
 
@@ -239,7 +238,113 @@ public class formEmprestimo {
         }
     }
     
+    static int idUsuario = Login.userId;
     public static void desfazerEmprestimo(){
+        if(Login.userType == 1 || Login.userType == 2){
+            JDialog caixaDialogo = new JDialog((Frame) null, "Selecionar usuário", true);
+            caixaDialogo.setLayout(new GridLayout(4,1));
+            caixaDialogo.setSize(300, 175);
+            caixaDialogo.setLocationRelativeTo(null);
+            
+            JPanel instrucaoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,10, 10));
+            JLabel instrucaoTxt = new JLabel("Deseja devolver livros de quem?");
+            instrucaoPanel.add(instrucaoTxt);
+            
+            JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            JRadioButton rbPraMim = new JRadioButton("Para mim");
+            JRadioButton rbParaOutro = new JRadioButton("Para outra pessoa");
+            ButtonGroup grupoBotoes = new ButtonGroup();
+            grupoBotoes.add(rbPraMim);
+            grupoBotoes.add(rbParaOutro);
+            radioPanel.add(rbPraMim);
+            radioPanel.add(rbParaOutro);
+            rbPraMim.setSelected(true);
+            
+            JPanel usuarioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JLabel usuarioLabel = new JLabel("Username:");
+            JTextField usuarioField = new JTextField(10);
+            usuarioField.setEnabled(false);
+            usuarioLabel.setForeground(Color.GRAY);
+            usuarioPanel.add(usuarioLabel);
+            usuarioPanel.add(usuarioField);
+
+            rbParaOutro.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    usuarioLabel.setForeground(Color.BLACK);
+                    usuarioField.setEnabled(true);
+                }
+            });
+
+            rbPraMim.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    usuarioLabel.setForeground(Color.GRAY);
+                    usuarioField.setEnabled(false);
+                }
+            });
+
+            JPanel botoesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JButton btnConfirmar = new JButton("Confirmar");
+            JButton btnCancelar = new JButton("Cancelar");
+            botoesPanel.add(btnConfirmar);
+            botoesPanel.add(btnCancelar);
+
+            caixaDialogo.add(instrucaoPanel);
+            caixaDialogo.add(radioPanel);
+            caixaDialogo.add(usuarioPanel);
+            caixaDialogo.add(botoesPanel);
+
+            usuarioField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e){
+                    if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                        btnConfirmar.doClick();
+                    }
+                }
+            });
+
+            btnCancelar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    caixaDialogo.dispose();
+                }
+            });
+
+            btnConfirmar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    EmprestimoDao emprestimoDao = new EmprestimoDao();
+                    if(rbPraMim.isSelected()){
+                        idUsuario = Login.userId;
+                        if(emprestimoDao.buscarLivrosEmprestados(idUsuario).isEmpty()){
+                            JOptionPane.showMessageDialog(null, "Você não possui nenhum livro emprestado :)");
+                            return;
+                        }
+                    } else {
+                        String username = usuarioField.getText().trim();
+                        if(username.isEmpty()){
+                            JOptionPane.showMessageDialog(null, "Insira um username válido!");
+                            return;
+                        }
+
+                        int idEncontrado = new UserDao().getUserId(username);
+                        if(idEncontrado == -1){
+                            JOptionPane.showMessageDialog(null, "Usuário não encontrado! Tente novamente.");
+                            return;
+                        }
+                        if(emprestimoDao.buscarLivrosEmprestados(idEncontrado).isEmpty()){
+                            JOptionPane.showMessageDialog(null, "Você não possui nenhum livro emprestado :)");
+                            return;
+                        }
+                        idUsuario = idEncontrado;
+                    }
+                    caixaDialogo.dispose();
+                }
+            });
+            caixaDialogo.setVisible(true);
+        }
+
         JFrame telaDesfazerEmprestimo = new JFrame("Devolver livro");
         telaDesfazerEmprestimo.setSize(400,400);
         telaDesfazerEmprestimo.setResizable(false);
@@ -248,7 +353,7 @@ public class formEmprestimo {
         
         telaDesfazerEmprestimo.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosed(WindowEvent e){
                 new MainMenu(Login.userType);
             }
         });
@@ -274,7 +379,7 @@ public class formEmprestimo {
         mainPainelDevolucao.add(scrollPane, BorderLayout.CENTER);
 
         EmprestimoDao emprestimoDao = new EmprestimoDao();
-        List<Livro> livrosEmprestimos = emprestimoDao.buscarLivrosEmprestados(Login.userId);
+        List<Livro> livrosEmprestimos = emprestimoDao.buscarLivrosEmprestados(idUsuario);
         for(Livro livro : livrosEmprestimos){
             modeloDevolucao.addRow(new Object[]{
                 livro.getTitulo(),
@@ -295,7 +400,6 @@ public class formEmprestimo {
             @Override
             public void actionPerformed(ActionEvent e){
                 telaDesfazerEmprestimo.dispose();
-                new MainMenu(Login.userType);
             }
         });
 
@@ -309,7 +413,7 @@ public class formEmprestimo {
                     livrosEmprestados.add(livro);
                 }
 
-                if(emprestimoDao.devolverLivros(livrosEmprestados, Login.userId)){
+                if(emprestimoDao.devolverLivros(livrosEmprestados, idUsuario)){
                     JOptionPane.showMessageDialog(null, "Livro(s) devolvido(s) com sucesso!");
                     telaDesfazerEmprestimo.dispose();
                     new MainMenu(Login.userType);
@@ -339,12 +443,12 @@ public class formEmprestimo {
                     return;
                 }
 
-                if(emprestimoDao.devolverLivros(livrosSelecionados, Login.userId)){
+                if(emprestimoDao.devolverLivros(livrosSelecionados, idUsuario)){
                     JOptionPane.showMessageDialog(null, "Livro(s) devolvido(s) com sucesso!");
 
                     modeloDevolucao.setRowCount(0);
 
-                    List<Livro> atualizarLivros = emprestimoDao.buscarLivrosEmprestados(Login.userId);
+                    List<Livro> atualizarLivros = emprestimoDao.buscarLivrosEmprestados(idUsuario);
                     for(Livro livro : atualizarLivros){
                         modeloDevolucao.addRow(new Object[]{
                             livro.getTitulo(),

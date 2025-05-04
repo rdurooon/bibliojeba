@@ -118,7 +118,7 @@ public class Login {
             @Override
             public void keyPressed(KeyEvent e){
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    loginBtn.requestFocus();
+                    loginBtn.doClick();
                 }
             }
         });

@@ -104,10 +104,12 @@ public class MainMenu {
         btnDesemprestimo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                EmprestimoDao emprestimoDao = new EmprestimoDao();
-                if(emprestimoDao.buscarLivrosEmprestados(Login.userId).isEmpty()){
-                    JOptionPane.showMessageDialog(null, "Você não possui nenhum livro emprestado :)");
-                    return;
+                if(Login.userType == 3){
+                    EmprestimoDao emprestimoDao = new EmprestimoDao();
+                    if(emprestimoDao.buscarLivrosEmprestados(Login.userId).isEmpty()){
+                        JOptionPane.showMessageDialog(null, "Você não possui nenhum livro emprestado :)");
+                        return;
+                    }
                 }
 
                 formEmprestimo.desfazerEmprestimo();
