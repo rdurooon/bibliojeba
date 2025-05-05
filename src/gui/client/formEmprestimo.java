@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class formEmprestimo {
     private static JTable tabelaLivros;
     private static DefaultTableModel modeloTabela;
-    
+    private static boolean cancell;
     public static void fazerEmprestimo(){
         JFrame telaFazerEmprestimo = new JFrame("Fazer empréstimo");
         telaFazerEmprestimo.setSize(400,400);
@@ -112,7 +112,6 @@ public class formEmprestimo {
                 }
             });
         }
-        
         if(Login.userType == 1 || Login.userType == 2){
             btnEmprestimo.addActionListener(new ActionListener() {
                 @Override
@@ -175,6 +174,8 @@ public class formEmprestimo {
                         @Override
                         public void actionPerformed(ActionEvent e){
                             caixaDialogo.dispose();
+                            cancell = true;
+                            return;
                         }
                     });
 
@@ -237,7 +238,7 @@ public class formEmprestimo {
             });
         }
     }
-    
+
     static int idUsuario = Login.userId;
     public static void desfazerEmprestimo(){
         if(Login.userType == 1 || Login.userType == 2){
@@ -303,11 +304,13 @@ public class formEmprestimo {
                     }
                 }
             });
-
+            cancell = false;
             btnCancelar.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e){
                     caixaDialogo.dispose();
+                    cancell = true;
+                    return;
                 }
             });
 
@@ -343,6 +346,11 @@ public class formEmprestimo {
                 }
             });
             caixaDialogo.setVisible(true);
+        }
+
+        if(cancell == true){
+            new MainMenu(Login.userType);
+            return;
         }
 
         JFrame telaDesfazerEmprestimo = new JFrame("Devolver livro");

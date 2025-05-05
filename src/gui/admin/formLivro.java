@@ -29,7 +29,7 @@ public class formLivro {
 
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosed(WindowEvent e){
                 new MainMenu(Login.userType);
             }
         });
@@ -55,9 +55,11 @@ public class formLivro {
         JButton btnAdicionar = new JButton("Adicionar livro");
         JButton btnModificar = new JButton("Modificar livro");
         JButton btnRemover = new JButton("Remover livro");
+        JButton btnVoltar = new JButton("Voltar");
         btnPanel.add(btnAdicionar);
         btnPanel.add(btnModificar);
         btnPanel.add(btnRemover);
+        btnPanel.add(btnVoltar);
 
         mainPainel.add(btnPanel, BorderLayout.SOUTH);
 
@@ -79,6 +81,13 @@ public class formLivro {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deletarLivro();
+            }
+        });
+
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                mainFrame.dispose();
             }
         });
 

@@ -36,6 +36,17 @@ public class Usuario extends Pessoa{
         this.cep = cep;
         this.idTipoUsuario = idTipoUsuario;
     }
+
+    public Usuario(String nome, String email, String cpf, String num_cel, String username, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
+        super(nome, email, cpf, num_cel);
+        this.username = username;
+        this.endereco = endereco;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.idTipoUsuario = idTipoUsuario;
+    }
     
     public Usuario(int id, String nome, String email, String cpf, String num_cel, int id2, String username, String password, String endereco, String bairro, String cidade, String estado, String cep, int idTipoUsuario) {
         super(id, nome, email, cpf, num_cel);

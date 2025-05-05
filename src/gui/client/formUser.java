@@ -183,7 +183,7 @@ public class formUser {
                     return;
                 }
 
-                if(!new UserDao().changeData(attUser)){
+                if(!new UserDao().changeData(attUser, Login.userId)){
                     JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar dados! Tente novamente.");
                     return;
                 }

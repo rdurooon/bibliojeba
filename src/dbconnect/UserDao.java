@@ -25,10 +25,44 @@ public class UserDao {
 
     public Usuario getUser(String login){
         Usuario usuario = null;
-        String query = "SELECT user.id_usuario, p.id_pessoa, p.nome, p.email, p.cpf, p.numero_cel, user.username, user.senha, user.endereco, user.bairro, user.cidade, user.estado, user.cep, user.id_tipo_usuario FROM usuario u JOIN pessoa p ON user.id_pessoa = p.id_pessoa WHERE user.username = ?";
+        String query = "SELECT u.id_usuario, p.id_pessoa, p.nome, p.email, p.cpf, p.numero_cel, u.username, u.senha, u.endereco, u.bairro, u.cidade, u.estado, u.cep, u.id_tipo_usuario FROM usuario u JOIN pessoa p ON u.id_pessoa = p.id_pessoa WHERE u.username = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
             ps.setString(1, login);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    int idPessoa = rs.getInt("id_pessoa");
+                    String nome = rs.getString("nome");
+                    String email = rs.getString("email");
+                    String cpf = rs.getString("cpf");
+                    String numCel = rs.getString("numero_cel");
+
+                    int idUsuario = rs.getInt("id_usuario");
+                    String username = rs.getString("username");
+                    String senha = rs.getString("senha");
+                    String endereco = rs.getString("endereco");
+                    String bairro = rs.getString("bairro");
+                    String cidade = rs.getString("cidade");
+                    String estado = rs.getString("estado");
+                    String cep = rs.getString("cep");
+                    int idTipoUsuario = rs.getInt("id_tipo_usuario");
+
+                    usuario = new Usuario(idPessoa, nome, email, cpf, numCel, idUsuario, username, senha, endereco, bairro, cidade , estado, cep, idTipoUsuario);
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+
+    public Usuario getUserById(int idUser){
+        Usuario usuario = null;
+        String query = "SELECT u.id_usuario, p.id_pessoa, p.nome, p.email, p.cpf, p.numero_cel, u.username, u.senha, u.endereco, u.bairro, u.cidade, u.estado, u.cep, u.id_tipo_usuario FROM usuario u JOIN pessoa p ON u.id_pessoa = p.id_pessoa WHERE u.id_usuario = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)){
+            ps.setInt(1, idUser);
 
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
@@ -195,36 +229,76 @@ public class UserDao {
         return false;
     }
 
-    public boolean changeData(Usuario usuario){
-        String queryPessoa = "UPDATE pessoa SET nome = ?, cpf = ?, numero_cel = ? WHERE id_pessoa = (SELECT id_pessoa FROM usuario WHERE username = ?)";
-        String queryUser = "UPDATE usuario SET endereco = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE username = ?";
-
-        try(Connection conn = dbConnection.getConnection();){
-            conn.setAutoCommit(false);
-
-            try(PreparedStatement psPessoa = conn.prepareStatement(queryPessoa); PreparedStatement psUser = conn.prepareStatement(queryUser)){
-                psPessoa.setString(1, usuario.getNome());
-                psPessoa.setString(2, usuario.getCpf());
-                psPessoa.setString(3, usuario.getNum_cel());
-                psPessoa.setString(4, Login.userName);
-                psPessoa.executeUpdate();
-                
-                psUser.setString(1, usuario.getEndereco());
-                psUser.setString(2, usuario.getBairro());
-                psUser.setString(3, usuario.getCidade());
-                psUser.setString(4, usuario.getEstado());
-                psUser.setString(5, usuario.getCep());
-                psUser.setString(6, Login.userName);
-                psUser.executeUpdate();
-
-                conn.commit();
-                return true;
+    public boolean changeData(Usuario usuario, int idUser){
+        if(Login.userId == 3){
+            String queryPessoa = "UPDATE pessoa SET nome = ?, cpf = ?, numero_cel = ? WHERE id_pessoa = (SELECT id_pessoa FROM usuario WHERE username = ?)";
+            String queryUser = "UPDATE usuario SET endereco = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE username = ?";
+    
+            try(Connection conn = dbConnection.getConnection();){
+                conn.setAutoCommit(false);
+    
+                try(PreparedStatement psPessoa = conn.prepareStatement(queryPessoa); PreparedStatement psUser = conn.prepareStatement(queryUser)){
+                    psPessoa.setString(1, usuario.getNome());
+                    psPessoa.setString(2, usuario.getCpf());
+                    psPessoa.setString(3, usuario.getNum_cel());
+                    psPessoa.setString(4, Login.userName);
+                    psPessoa.executeUpdate();
+                    
+                    psUser.setString(1, usuario.getEndereco());
+                    psUser.setString(2, usuario.getBairro());
+                    psUser.setString(3, usuario.getCidade());
+                    psUser.setString(4, usuario.getEstado());
+                    psUser.setString(5, usuario.getCep());
+                    psUser.setString(6, Login.userName);
+                    psUser.executeUpdate();
+    
+                    conn.commit();
+                    return true;
+                } catch (SQLException e){
+                    conn.rollback();
+                    e.printStackTrace();
+                }
             } catch (SQLException e){
-                conn.rollback();
                 e.printStackTrace();
             }
-        } catch (SQLException e){
-            e.printStackTrace();
+        }
+
+        if(Login.userId == 2 || Login.userId == 1){
+            String queryPessoa = "UPDATE pessoa SET nome = ?, cpf = ?, numero_cel = ?, email = ? WHERE id_pessoa = (SELECT id_pessoa FROM usuario WHERE username = ?)";
+            String queryUser = "UPDATE usuario SET endereco = ?, bairro = ?, cidade = ?, estado = ?, cep = ?, id_tipo_usuario = ?, username = ? WHERE username = ?";
+
+            try (Connection conn = dbConnection.getConnection()) {
+                conn.setAutoCommit(false);
+
+                try (PreparedStatement psPessoa = conn.prepareStatement(queryPessoa);
+                    PreparedStatement psUser = conn.prepareStatement(queryUser)) {
+
+                    psPessoa.setString(1, usuario.getNome());
+                    psPessoa.setString(2, usuario.getCpf());
+                    psPessoa.setString(3, usuario.getNum_cel());
+                    psPessoa.setString(4, usuario.getEmail());
+                    psPessoa.setString(5, usuario.getUsername());
+                    psPessoa.executeUpdate();
+
+                    psUser.setString(1, usuario.getEndereco());
+                    psUser.setString(2, usuario.getBairro());
+                    psUser.setString(3, usuario.getCidade());
+                    psUser.setString(4, usuario.getEstado());
+                    psUser.setString(5, usuario.getCep());
+                    psUser.setInt(6, usuario.getIdTipoUsuario());
+                    psUser.setString(7, usuario.getUsername());  
+                    psUser.setString(8, usuario.getUsername()); 
+                    psUser.executeUpdate();
+
+                    conn.commit();
+                    return true;
+                } catch (SQLException e){
+                    conn.rollback();
+                    e.printStackTrace();
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
         }
         return false;
     }
